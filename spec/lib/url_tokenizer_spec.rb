@@ -22,4 +22,36 @@ describe UrlTokenizer do
       end
     end
   end
+
+  describe 'register' do
+    let(:test_provider) { spy :test_provider }
+
+    describe 'with symbol key' do
+      before do
+        subject.register test: test_provider
+      end
+
+      it 'can be retrieved by symbol key' do
+        subject.provider(:test).to eq test_provider
+      end
+
+      it 'can be retrieved by string key' do
+        subject.provider('test').to eq test_provider
+      end
+    end
+
+    describe 'with string key' do
+      before do
+        subject.register 'test' => test_provider
+      end
+
+      it 'can be retrieved by symbol key' do
+        subject.provider(:test).to eq test_provider
+      end
+
+      it 'can be retrieved by string key' do
+        subject.provider('test').to eq test_provider
+      end
+    end
+  end
 end
