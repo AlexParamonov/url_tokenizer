@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe UrlTokenizer do
-  it 'has a version number' do
-    expect(UrlTokenizer::VERSION).not_to be nil
-  end
-
   describe 'provider' do
     it 'returns a callable object' do
       subject.register dummy: spy

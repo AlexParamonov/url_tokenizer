@@ -1,5 +1,3 @@
-require "url_tokenizer/version"
-
 module UrlTokenizer
   Error = Class.new StandardError
   class << self
