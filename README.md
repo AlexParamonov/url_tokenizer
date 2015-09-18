@@ -2,8 +2,8 @@ UrlTokenizer
 ================================
 [![Build Status](https://travis-ci.org/AlexParamonov/url_tokenizer.png?branch=master)](https://travis-ci.org/AlexParamonov/url_tokenizer)
 [![Gemnasium Build Status](https://gemnasium.com/AlexParamonov/url_tokenizer.png)](http://gemnasium.com/AlexParamonov/url_tokenizer)
-[![Coverage Status](https://coveralls.io/repos/AlexParamonov/url_tokenizer/badge.png?branch=master)](https://coveralls.io/r/AlexParamonov/url_tokenizer?branch=master)
 [![Gem Version](https://badge.fury.io/rb/url_tokenizer.png)](http://badge.fury.io/rb/url_tokenizer)
+[![Test Coverage](https://codeclimate.com/github/AlexParamonov/url_tokenizer/badges/coverage.svg)](https://codeclimate.com/github/AlexParamonov/url_tokenizer/coverage)
 [![Code Climate](https://codeclimate.com/github/AlexParamonov/url_tokenizer.png)](https://codeclimate.com/github/AlexParamonov/url_tokenizer)
 
 Tokenize url by variety of providers
