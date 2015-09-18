@@ -54,7 +54,7 @@ Obtain provider and tokenize url:
 
 ``` ruby
 tokenizer = UrlTokenizer.provider('LL', key: 'super_secret_key')
-tokenizer.call url, expire_in: 1.hour
+tokenizer.call url, expires_in: 1.hour
 ```
 
 Contacts
