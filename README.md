@@ -45,7 +45,7 @@ Register provider using `UrlTokenizer.register`
 
 ``` ruby
 require 'url_tokenizer/limelight'
-UrlTokenizer.register 'LL' => UrlTokenizer::Limelight.new(key: 'super_secret_key')
+UrlTokenizer.register 'LL' => UrlTokenizer::Limelight.new('super_secret_key')
 ```
 
 Obtain provider and tokenize url:
