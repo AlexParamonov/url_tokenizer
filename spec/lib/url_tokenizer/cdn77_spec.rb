@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'url_tokenizer/cdn77'
+require 'support/real_data_context'
 
 describe UrlTokenizer::CDN77 do
   subject { described_class.new key }
@@ -33,23 +34,14 @@ describe UrlTokenizer::CDN77 do
     it "adds timestamp" do
       expect(subject.call url, expires_in: 123).to match /,\d+$/
     end
-
   end
 
   describe 'with real data' do
-    let(:key) { "secret" }
-
-    pending "is successful" do
-      url = subject.call "http://vod15play.malimarcdn.com/vod15/mp4:sample.mp4/playlist.m3u8", expires_in: 11111111
-
-      uri = URI.parse url
-      is_request_successful = Net::HTTP.start(uri.host, uri.port) do |http|
-        http.head(uri.request_uri).code == "200"
-      end
-      expect(is_request_successful).to be_truthy
+    include_context "real_data_context" do
+      let(:key) { ENV['CDN77_TOKEN'] }
+      let(:url) { "http://vod15play.malimarcdn.com/vod15/mp4:sample.mp4/playlist.m3u8" }
     end
   end
-
 
   private
   def url_with_params(**params)
