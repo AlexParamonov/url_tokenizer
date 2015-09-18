@@ -3,10 +3,10 @@ require_relative 'url_tokenizer/provider'
 module UrlTokenizer
   Error = Class.new StandardError
   class << self
-    def provider(name, key: nil)
+    def provider(name)
       providers.fetch(name) do
         raise Error, "unknown provider '#{ name }'"
-      end.new key
+      end
     end
 
     def register(provider_hash)

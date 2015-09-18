@@ -7,11 +7,10 @@ describe UrlTokenizer do
       expect(subject.provider :dummy).to respond_to :call
     end
 
-    it 'initialize provider' do
-      provider_class = spy
-      subject.register spy: provider_class
-      expect(provider_class).to receive(:new)
-      subject.provider :spy
+    it 'returns registered provider' do
+      provider = double :provider
+      subject.register test_provider: provider
+      expect(subject.provider :test_provider).to eq provider
     end
 
     describe 'when provider can not be found' do
