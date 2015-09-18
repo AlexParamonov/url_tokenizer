@@ -32,14 +32,11 @@ Or install it yourself as:
 
     $ gem install url_tokenizer
 
-You'll need UrlTokenizer provider gems as well:
-
-    $ gem install url_tokenizer-provider-limelight
+UrlTokenizer gem has Limelight and CDN77 providers bundled.
 
 Requirements
 ------------
-1. Ruby >= 1.9
-1. UrlTokenizer gem
+1. Ruby >= 2.1
 
 Usage
 ------------
@@ -47,13 +44,14 @@ Usage
 Register provider using `UrlTokenizer.register`
 
 ``` ruby
-UrlTokenizer.register 'LL' => UrlTokenizer::Provider::Limelight
+require 'url_tokenizer/limelight'
+UrlTokenizer.register 'LL' => UrlTokenizer::Limelight.new(key: 'super_secret_key')
 ```
 
 Obtain provider and tokenize url:
 
 ``` ruby
-tokenizer = UrlTokenizer.provider('LL', key: 'super_secret_key')
+tokenizer = UrlTokenizer.provider 'LL'
 tokenizer.call url, expires_in: 1.hour
 ```
 
@@ -70,11 +68,8 @@ tested with Ruby:
 
 * 2.2
 * 2.1
-* 2.0
-* 1.9.3
 * ruby-head
 * rbx-2
-* jruby-19mode
 * jruby-head
 
 See [build history](http://travis-ci.org/#!/AlexParamonov/url_tokenizer/builds)
