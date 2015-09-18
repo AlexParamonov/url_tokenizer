@@ -1,3 +1,5 @@
+require_relative 'url_tokenizer/provider'
+
 module UrlTokenizer
   Error = Class.new StandardError
   class << self
