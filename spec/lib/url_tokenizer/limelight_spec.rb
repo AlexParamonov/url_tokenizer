@@ -18,8 +18,8 @@ describe UrlTokenizer::Limelight do
     let(:url) { url_with_params e: 12345 }
 
     it 'ignores and overwrites them' do
-      expect(subject.call url, expire_in: 10).not_to include 'e=12345'
-      expect(subject.call url, expire_in: 10).to match /e=\d+\&/
+      expect(subject.call url, expires_in: 10).not_to include 'e=12345'
+      expect(subject.call url, expires_in: 10).to match /e=\d+\&/
     end
   end
 

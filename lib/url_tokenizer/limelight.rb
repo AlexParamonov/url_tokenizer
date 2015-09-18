@@ -26,7 +26,7 @@ module UrlTokenizer
     def build_options(token_options, url:, uri:)
       server_params = {
         p: url.length,
-        e: expiration_date(token_options[:expire_in]),
+        e: expiration_date(token_options[:expires_in]),
       }.delete_if { |k, v| v.nil? }
 
       cookie_params = {
