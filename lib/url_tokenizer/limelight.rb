@@ -2,6 +2,7 @@ require 'uri'
 require 'cgi'
 require 'digest'
 require_relative 'provider'
+require 'facets/hash/symbolize_keys'
 
 module UrlTokenizer
   class Limelight < Provider
@@ -44,7 +45,7 @@ module UrlTokenizer
     def url_params(uri)
       return {} if uri.query.nil?
 
-      symbolize_keys(CGI.parse(uri.query)).tap do |params|
+      CGI.parse(uri.query).symbolize_keys.tap do |params|
         PARAMS.each do |param|
           params.delete param
         end
@@ -57,21 +58,6 @@ module UrlTokenizer
 
     def digest(url)
       Digest::MD5.hexdigest "#{ key }#{ url }"
-    end
-
-    def symbolize_keys(hash)
-      hash.inject({}){|result, (key, value)|
-        new_key = case key
-                  when String then key.to_sym
-                  else key
-                  end
-        new_value = case value
-                    when Hash then symbolize_keys(value)
-                    else value
-                    end
-        result[new_key] = new_value
-        result
-      }
     end
   end
 end
