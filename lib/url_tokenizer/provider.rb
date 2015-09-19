@@ -1,8 +1,8 @@
 module UrlTokenizer
   class Provider
-    def initialize(key, **provider_options)
+    def initialize(key, **global_options)
       @key = key
-      @provider_options = provider_options
+      @global_options = global_options
     end
 
     def call(input_url, **options)
@@ -10,6 +10,6 @@ module UrlTokenizer
     end
 
     private
-    attr_reader :key, :provider_options
+    attr_reader :key, :global_options
   end
 end

@@ -27,12 +27,12 @@ module UrlTokenizer
     def build_options(token_options, url:, uri:)
       server_params = {
         p: url.length,
-        e: expiration_date(token_options[:expires_in]),
+        e: expiration_date(token_options[:expires_in] || global_options[:expires_in]),
       }.delete_if { |k, v| v.nil? }
 
       cookie_params = {
-        cd: token_options[:cd],
-        cf: expiration_date(token_options[:cf]),
+        cd: token_options[:cd] || global_options[:cd],
+        cf: expiration_date(token_options[:cf] || global_options[:cf]),
       }.delete_if { |k, v| v.nil? }
 
       server_params.delete :e if cookie_params.any?

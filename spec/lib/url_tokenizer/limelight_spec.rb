@@ -60,12 +60,46 @@ describe UrlTokenizer::Limelight do
       url << '?e=12345'
       expect(subject.call url, cd: 100, cf: 12345).not_to include 'e='
     end
+
+    describe 'global options' do
+      subject { described_class.new key, cf: 12345 }
+
+      it "uses global options" do
+        global_expiration_time = (Time.now.utc + 12345).to_i
+        actual_expiration_time = subject.call(url).match(/cf=(\d+)/)[1].to_i
+        expect(actual_expiration_time).to be_within(2).of(global_expiration_time)
+      end
+
+      it "prefers local options" do
+        local_expiration_time = (Time.now.utc + 10).to_i
+
+        actual_expiration_time = subject.call(url, cf: 10).match(/cf=(\d+)/)[1].to_i
+        expect(actual_expiration_time).to be_within(2).of(local_expiration_time)
+      end
+    end
   end
 
   describe 'with real data' do
     include_context "real_data_context" do
       let(:key) { ENV['LL_TOKEN'] }
       let(:url) { "http://liveplay9.malimarserver.com/ll/ch8hd.stream/playlist.m3u8" }
+    end
+  end
+
+  describe 'global options' do
+    subject { described_class.new key, expires_in: 12345 }
+
+    it "uses global options" do
+      global_expiration_time = (Time.now.utc + 12345).to_i
+      actual_expiration_time = subject.call(url).match(/e=(\d+)/)[1].to_i
+      expect(actual_expiration_time).to be_within(2).of(global_expiration_time)
+    end
+
+    it "prefers local options" do
+      local_expiration_time = (Time.now.utc + 10).to_i
+
+      actual_expiration_time = subject.call(url, expires_in: 10).match(/e=(\d+)/)[1].to_i
+      expect(actual_expiration_time).to be_within(2).of(local_expiration_time)
     end
   end
 
