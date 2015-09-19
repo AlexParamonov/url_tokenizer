@@ -10,7 +10,7 @@ module UrlTokenizer
       path = uri.path
       return if path.empty? || path == '/'
 
-      expiration = expiration_date(options[:expires_in])
+      expiration = expiration_date(options[:expires_in] || global_options[:expires_in])
       token = digest [expiration, path, key].compact.join
       token = [token, expiration].compact.join ','
 
