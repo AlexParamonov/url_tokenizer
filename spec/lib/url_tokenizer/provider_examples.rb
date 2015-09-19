@@ -1,9 +1,4 @@
-require 'spec_helper'
-
-describe UrlTokenizer::Provider do
-  subject { described_class.new key }
-  let(:key) { "secret key" }
-
+shared_examples_for :provider do
   it 'requires the key' do
     expect do
       described_class.new
@@ -11,6 +6,12 @@ describe UrlTokenizer::Provider do
 
     expect do
       described_class.new key
+    end.not_to raise_error
+  end
+
+  it 'accepts provider options' do
+    expect do
+      described_class.new key, foo: :bar
     end.not_to raise_error
   end
 
@@ -26,6 +27,12 @@ describe UrlTokenizer::Provider do
 
       expect do
         subject.call 'http://example.com'
+      end.not_to raise_error
+    end
+
+    it 'accepts provider options' do
+      expect do
+        subject.call 'http://example.com', foo: :bar
       end.not_to raise_error
     end
   end

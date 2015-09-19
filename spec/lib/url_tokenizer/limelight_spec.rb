@@ -1,16 +1,24 @@
 require 'spec_helper'
 require 'url_tokenizer/limelight'
+require 'support/real_data_context'
+require_relative 'provider_examples'
 
 describe UrlTokenizer::Limelight do
+  it_behaves_like :provider
+
   subject { described_class.new key }
   let(:key) { "secret" }
   let(:url) { url_with_params }
 
-  describe 'when url have the query string' do
+  describe 'when url have the query string with parameters' do
     let(:url) { url_with_params foo: :bar }
 
     it 'does not add question mark' do
       expect(subject.call(url).count('?')).to eq 1
+    end
+
+    it 'persists query string' do
+      expect(subject.call url).to include "foo=bar"
     end
   end
 
@@ -51,6 +59,13 @@ describe UrlTokenizer::Limelight do
     it "removes e parameter" do
       url << '?e=12345'
       expect(subject.call url, cd: 100, cf: 12345).not_to include 'e='
+    end
+  end
+
+  describe 'with real data' do
+    include_context "real_data_context" do
+      let(:key) { ENV['LL_TOKEN'] }
+      let(:url) { "http://liveplay9.malimarserver.com/ll/ch8hd.stream/playlist.m3u8" }
     end
   end
 
