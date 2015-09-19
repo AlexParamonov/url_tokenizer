@@ -6,11 +6,12 @@ require_relative 'provider'
 module UrlTokenizer
   class CDN77 < Provider
     def call(input_url, **options)
+      options = global_options.merge options
       uri = URI.parse input_url
       path = uri.path
       return if path.empty? || path == '/'
 
-      expiration = expiration_date(options[:expires_in] || global_options[:expires_in])
+      expiration = expiration_date(options[:expires_in])
       token = digest [expiration, path, key].compact.join
       token = [token, expiration].compact.join ','
 
