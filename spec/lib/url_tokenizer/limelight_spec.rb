@@ -79,10 +79,16 @@ describe UrlTokenizer::Limelight do
     end
   end
 
+  describe 'ip restriction' do
+    it "adds ip parameter" do
+      expect(subject.call url, ip: '127.0.0.1').to include 'ip=127.0.0.1'
+    end
+  end
+
   describe 'with real data' do
     include_context "real_data_context" do
       let(:key) { ENV['LL_TOKEN'] }
-      let(:url) { "http://liveplay9.malimarserver.com/ll/ch8hd.stream/playlist.m3u8" }
+      let(:url) { "http://malimarmmd.mmdlive.lldns.net/malimarmmd/30a2626fde434c26be096246332e0e73/manifest.m3u8" }
     end
   end
 

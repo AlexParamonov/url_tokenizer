@@ -36,11 +36,16 @@ module UrlTokenizer
         cf: expiration_date(token_options[:cf]),
       }.delete_if { |k, v| v.nil? }
 
+      filtering_params = {
+        ip: token_options[:ip]
+      }
+
       server_params.delete :e if cookie_params.any?
 
       url_params(uri)
         .merge(server_params)
         .merge(cookie_params)
+        .merge(filtering_params)
     end
 
     def url_params(uri)
