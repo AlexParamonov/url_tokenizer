@@ -38,7 +38,7 @@ module UrlTokenizer
 
       filtering_params = {
         ip: token_options[:ip]
-      }
+      }.delete_if { |k, v| v.nil? }
 
       server_params.delete :e if cookie_params.any?
 
