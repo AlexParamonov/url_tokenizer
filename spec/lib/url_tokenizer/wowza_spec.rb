@@ -40,6 +40,23 @@ describe UrlTokenizer::Wowza do
     end
   end
 
+  describe 'global options' do
+    subject { described_class.new key, expires_in: 12345 }
+
+    it "uses global options" do
+      global_expiration_time = (Time.now.utc + 12345).to_i
+      actual_expiration_time = subject.call(url).match(/wowzatokenendtime=(\d+)/)[1].to_i
+      expect(actual_expiration_time).to be_within(2).of(global_expiration_time)
+    end
+
+    it "prefers local options" do
+      local_expiration_time = (Time.now.utc + 10).to_i
+
+      actual_expiration_time = subject.call(url, expires_in: 10).match(/wowzatokenendtime=(\d+)/)[1].to_i
+      expect(actual_expiration_time).to be_within(2).of(local_expiration_time)
+    end
+  end
+
   private
   def url_with_params(**params)
     query_string = URI.encode_www_form params
