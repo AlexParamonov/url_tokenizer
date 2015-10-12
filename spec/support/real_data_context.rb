@@ -15,7 +15,7 @@ shared_context "real_data_context" do
 
   describe "with outdated token" do
     it "is unsuccessful" do
-      url_with_token = subject.call url, expires_in: -2
+      url_with_token = subject.call url, expires_in: -5
       expect(request_successful? url_with_token).not_to be_truthy
     end
   end

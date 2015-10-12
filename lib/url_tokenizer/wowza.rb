@@ -35,10 +35,12 @@ module UrlTokenizer
     end
 
     def encode_query(url, provider_options)
-      string_to_tokenize = [
-        "#{ url }?#{ key }",
-        build_query(provider_options)
-      ].compact.join '&'
+      pieces = build_query(provider_options).split('&')
+      pieces << key
+
+      query = pieces.compact.sort.join '&'
+
+      string_to_tokenize = "#{ url }?#{ query }"
 
       build_query provider_options.merge(
         wowzatokenhash: digest(string_to_tokenize)
