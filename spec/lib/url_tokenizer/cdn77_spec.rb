@@ -32,7 +32,7 @@ describe UrlTokenizer::CDN77 do
   describe 'with real data' do
     include_context "real_data_context" do
       let(:key) { ENV['CDN77_TOKEN'] }
-      let(:url) { "http://vod15play.malimarcdn.com/vod15/mp4:sample.mp4/playlist.m3u8" }
+      let(:url) { "http://1047940433.rsc.cdn77.org/Onair/ChumphitPhayakSao/ChumphitPhayakSao-13-10-Oct-2015.mp4/playlist.m3u8" }
     end
   end
 
