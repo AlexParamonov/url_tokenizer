@@ -58,10 +58,6 @@ module UrlTokenizer
       end
     end
 
-    def expiration_date(expires_in)
-      Time.now.utc.to_i + expires_in.to_i if expires_in
-    end
-
     def digest(url)
       Digest::MD5.hexdigest "#{ key }#{ url }"
     end

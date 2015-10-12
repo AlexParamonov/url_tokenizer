@@ -11,5 +11,15 @@ module UrlTokenizer
 
     private
     attr_reader :key, :global_options
+
+    def build_query(provider_options)
+      provider_options.reduce([]) do |query, (key, value)|
+        query << "#{ key }=#{ value }"
+      end.join '&'
+    end
+
+    def expiration_date(expires_in)
+      Time.now.utc.to_i + expires_in.to_i if expires_in
+    end
   end
 end
