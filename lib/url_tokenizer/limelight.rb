@@ -36,6 +36,7 @@ module UrlTokenizer
         cf: expiration_date(token_options[:cf]),
       }.delete_if { |k, v| v.nil? }
 
+      token_options.delete :ip if global_options[:ip] == false
       filtering_params = {
         ip: token_options[:ip]
       }.delete_if { |k, v| v.nil? }
