@@ -57,6 +57,17 @@ describe UrlTokenizer::Wowza do
     end
   end
 
+  describe 'ignore_in_path option' do
+    let(:url) { 'http://liveplay.example.com/ignore_me/please/wowza/playlist.m3u8' }
+    let(:ignore_in_path_option) { "ignore_me/please/" }
+
+    it 'skips matching text from been part of string to tokenize' do
+      expect(subject).not_to receive(:digest).with /#{ ignore_in_path_option }/
+
+      subject.call(url, ignore_in_path: ignore_in_path_option)
+    end
+  end
+
   private
   def url_with_params(**params)
     query_string = URI.encode_www_form params
