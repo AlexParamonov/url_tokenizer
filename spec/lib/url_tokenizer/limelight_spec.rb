@@ -93,10 +93,10 @@ describe UrlTokenizer::Limelight do
     end
   end
 
-  describe 'with real data' do
+  describe 'with real data', real_data: true do
     include_context "real_data_context" do
       let(:key) { ENV['LL_TOKEN'] }
-      let(:url) { "http://malimarvod-mmd-cust.lldns.net/Onair/sample.mp4/manifest.m3u8" }
+      let(:url) { "url_goes_here" }
     end
   end
 

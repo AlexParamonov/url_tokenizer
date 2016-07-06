@@ -37,10 +37,10 @@ describe UrlTokenizer::Wowza do
     end
   end
 
-  describe 'with real data' do
+  describe 'with real data', real_data: true do
     include_context "real_data_context" do
       let(:key) { ENV['WOWZA_TOKEN'] }
-      let(:url) { "http://sanorigin00.malimarcdn.com:1935/hdliveedge00/ch8hd.stream/playlist.m3u8" }
+      let(:url) { "url_goes_here" }
     end
   end
 
