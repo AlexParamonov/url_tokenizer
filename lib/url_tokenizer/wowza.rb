@@ -34,7 +34,13 @@ module UrlTokenizer
         wowzatokenendtime: expiration_date(token_options[:expires_in])
       }.delete_if { |k, v| v.nil? }
 
+      token_options.delete :ip if global_options[:ip] == false
+      filtering_params = {
+        ip: token_options[:ip]
+      }.delete_if { |k, v| v.nil? }
+
       server_params
+        .merge(filtering_params)
     end
 
     def encode_query(url, provider_options)

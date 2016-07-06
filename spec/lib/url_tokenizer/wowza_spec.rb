@@ -23,6 +23,20 @@ describe UrlTokenizer::Wowza do
     expect(subject.call url).to include 'wowzatokenhash='
   end
 
+  describe 'ip restriction' do
+    it "adds ip parameter" do
+      expect(subject.call url, ip: '127.0.0.1').to include 'ip=127.0.0.1'
+    end
+
+    describe 'when ip restriction disabled' do
+      subject { described_class.new key, ip: false }
+
+      it "adds ip parameter" do
+        expect(subject.call url, ip: '127.0.0.1').not_to include 'ip=127.0.0.1'
+      end
+    end
+  end
+
   describe 'with real data' do
     include_context "real_data_context" do
       let(:key) { ENV['WOWZA_TOKEN'] }
