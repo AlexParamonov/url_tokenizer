@@ -1,6 +1,5 @@
 require 'uri'
-require 'digest'
-require 'base64'
+require 'openssl'
 require_relative 'provider'
 
 module UrlTokenizer
