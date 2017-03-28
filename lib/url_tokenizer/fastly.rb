@@ -11,11 +11,12 @@ module UrlTokenizer
       return if path.empty? || path == '/'
 
       expiration = expiration_date(options[:expires_in])
+      dir = File.dirname(path)
 
-      token = digest [path, expiration].compact.join
+      token = digest [dir, expiration].compact.join
       token = [expiration, token].compact.join '_'
 
-      uri.query = build_query token: token
+      uri.path = ['/', token, path].join
       uri.to_s
     end
 
