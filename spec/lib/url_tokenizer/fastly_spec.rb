@@ -22,6 +22,15 @@ describe UrlTokenizer::Fastly do
     end
   end
 
+  describe 'when url have provider parameters' do
+    let(:url) { url_with_params token: '0000000000_e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4' }
+
+    it 'ignores and overwrites them' do
+      expect(subject.call url, expires_in: 10).not_to include '0000000000_'
+      expect(subject.call url, expires_in: 10).to match /example.com\/\d{10,}_/
+    end
+  end
+
   it "adds token to path" do
     path = URI(subject.call url).path
 
@@ -70,9 +79,11 @@ describe UrlTokenizer::Fastly do
   end
 
   private
-  def url_with_params(**params)
+  def url_with_params(token: nil, **params)
+    token = token + '/' if token
+
     query_string = URI.encode_www_form params
     query_string = "?#{ query_string }" unless query_string.empty?
-    "http://liveplay.example.com/fastly/testtokenstream/playlist.m3u8#{ query_string }"
+    "http://liveplay.example.com/#{token}fastly/testtokenstream/playlist.m3u8#{ query_string }"
   end
 end
