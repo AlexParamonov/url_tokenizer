@@ -1,3 +1,5 @@
+require 'net/http'
+
 shared_context "real_data_context" do
   let(:expires_in) { 60 }
 

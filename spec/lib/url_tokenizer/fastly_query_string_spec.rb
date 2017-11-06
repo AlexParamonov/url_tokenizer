@@ -1,14 +1,18 @@
 require 'spec_helper'
-require 'url_tokenizer/fastly'
+require 'url_tokenizer/fastly_query_string'
 require 'support/real_data_context'
 require_relative 'provider_examples'
 
-describe UrlTokenizer::Fastly do
+describe UrlTokenizer::FastlyQueryString do
   it_behaves_like :provider
 
   subject { described_class.new key }
   let(:key) { "secret" }
   let(:url) { url_with_params }
+
+  it "adds token parameter" do
+    expect(subject.call url).to include 'token='
+  end
 
   describe 'when url have the query string' do
     let(:url) { url_with_params foo: :bar }
@@ -19,19 +23,25 @@ describe UrlTokenizer::Fastly do
     end
   end
 
-  it "adds token parameter" do
-    expect(subject.call url).to include 'token='
+  describe 'when url have provider parameters' do
+    let(:url) { url_with_params token: '0000000000_e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4' }
+
+    it 'ignores and overwrites them' do
+      expect(subject.call url, expires_in: 10).not_to include '0000000000_'
+      expect(subject.call url, expires_in: 10).to match /token=\d{10,}_/
+    end
   end
 
   describe 'with expiration time' do
     it "adds timestamp" do
-      expect(subject.call url, expires_in: 123).to match /token=\d+_/
+      expect(subject.call url, expires_in: 123).to match /\=\d+_/
     end
   end
 
   describe 'with real data', real_data: true do
     include_context "real_data_context" do
-      let(:key) { ENV['CDN77_TOKEN'] }
+      let(:expires_in) { 86400 }
+      let(:key) { ENV['FASTLY_TOKEN'] }
       let(:url) { "url_goes_here" }
     end
   end
@@ -51,14 +61,14 @@ describe UrlTokenizer::Fastly do
 
     it "uses global options" do
       global_expiration_time = (Time.now.utc + 12345).to_i
-      actual_expiration_time = subject.call(url).match(/token=(\d+)_/)[1].to_i
+      actual_expiration_time = subject.call(url).match(/\=(\d+)/)[1].to_i
       expect(actual_expiration_time).to be_within(2).of(global_expiration_time)
     end
 
     it "prefers local options" do
       local_expiration_time = (Time.now.utc + 10).to_i
 
-      actual_expiration_time = subject.call(url, expires_in: 10).match(/token=(\d+)_/)[1].to_i
+      actual_expiration_time = subject.call(url, expires_in: 10).match(/\=(\d+)/)[1].to_i
       expect(actual_expiration_time).to be_within(2).of(local_expiration_time)
     end
   end
