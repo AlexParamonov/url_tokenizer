@@ -14,10 +14,11 @@ module UrlTokenizer
       expiration = expiration_date(options[:expires_in])
       dir = File.dirname(path)
 
-      token = digest [dir, expiration].compact.join
+      token = digest [path, expiration].compact.join
       token = [expiration, token].compact.join '_'
 
-      uri.path = ['/', token, path].join
+      # uri.path = ['/', token, path].join
+      uri.query = URI.encode_www_form({token: token})
       uri.to_s
     end
 
