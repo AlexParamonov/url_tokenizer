@@ -3,9 +3,9 @@ shared_context "real_data_context" do
 
   def request_successful?(url)
     uri = URI.parse url
-    Net::HTTP.start(uri.host, uri.port) do |http|
-      http.head(uri.request_uri).code == "200"
-    end
+    response = Net::HTTP.get_response(uri)
+
+    response.code == "200"
   end
 
   it "is successful" do
