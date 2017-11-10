@@ -13,25 +13,40 @@ describe UrlTokenizer::Fastly do
   describe 'when url have the query string' do
     let(:url) { url_with_params foo: :bar }
 
-    it 'removes the query string' do
-      expect(subject.call url).not_to include 'foo'
-      expect(subject.call url).not_to include 'bar'
+    it 'does not add question mark' do
+      expect(subject.call(url).count('?')).to eq 1
+    end
+
+    it 'persists query string' do
+      expect(subject.call url).to include "foo=bar"
     end
   end
 
-  it "adds token parameter" do
-    expect(subject.call url).to include 'token='
+  describe 'when url have provider parameters' do
+    let(:url) { url_with_params token: '0000000000_e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4' }
+
+    it 'ignores and overwrites them' do
+      expect(subject.call url, expires_in: 10).not_to include '0000000000_'
+      expect(subject.call url, expires_in: 10).to match /example.com\/\d{10,}_/
+    end
+  end
+
+  it "adds token to path" do
+    path = URI(subject.call url).path
+
+    expect(path).to match /\A\/\w+\/fastly/
   end
 
   describe 'with expiration time' do
     it "adds timestamp" do
-      expect(subject.call url, expires_in: 123).to match /token=\d+_/
+      expect(subject.call url, expires_in: 123).to match /example.com\/\d+_/
     end
   end
 
   describe 'with real data', real_data: true do
     include_context "real_data_context" do
-      let(:key) { ENV['CDN77_TOKEN'] }
+      let(:expires_in) { 86400 }
+      let(:key) { ENV['FASTLY_TOKEN'] }
       let(:url) { "url_goes_here" }
     end
   end
@@ -51,22 +66,24 @@ describe UrlTokenizer::Fastly do
 
     it "uses global options" do
       global_expiration_time = (Time.now.utc + 12345).to_i
-      actual_expiration_time = subject.call(url).match(/token=(\d+)_/)[1].to_i
+      actual_expiration_time = subject.call(url).match(/example.com\/(\d+)_/)[1].to_i
       expect(actual_expiration_time).to be_within(2).of(global_expiration_time)
     end
 
     it "prefers local options" do
       local_expiration_time = (Time.now.utc + 10).to_i
 
-      actual_expiration_time = subject.call(url, expires_in: 10).match(/token=(\d+)_/)[1].to_i
+      actual_expiration_time = subject.call(url, expires_in: 10).match(/example.com\/(\d+)_/)[1].to_i
       expect(actual_expiration_time).to be_within(2).of(local_expiration_time)
     end
   end
 
   private
-  def url_with_params(**params)
+  def url_with_params(token: nil, **params)
+    token = token + '/' if token
+
     query_string = URI.encode_www_form params
     query_string = "?#{ query_string }" unless query_string.empty?
-    "http://liveplay.example.com/fastly/testtokenstream/playlist.m3u8#{ query_string }"
+    "http://liveplay.example.com/#{token}fastly/testtokenstream/playlist.m3u8#{ query_string }"
   end
 end

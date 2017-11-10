@@ -7,21 +7,28 @@ module UrlTokenizer
     def call(input_url, **options)
       options = global_options.merge options
       uri = URI.parse input_url
-      path = uri.path
+      path = remove_old_token(uri.path)
+
       return if path.empty? || path == '/'
 
       expiration = expiration_date(options[:expires_in])
+      dir = File.dirname(path)
 
-      token = digest [path, expiration].compact.join
+      token = digest [dir, expiration].compact.join
       token = [expiration, token].compact.join '_'
 
-      uri.query = build_query token: token
+      uri.path = ['/', token, path].join
       uri.to_s
     end
 
     private
+
     def digest(string_to_sign)
       OpenSSL::HMAC.hexdigest('sha1', key, string_to_sign)
+    end
+
+    def remove_old_token(path)
+      path.sub(/\d{10,}_\w{40}\/?/, '')
     end
   end
 end
