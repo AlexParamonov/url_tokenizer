@@ -17,9 +17,12 @@ describe UrlTokenizer::FastlyQueryString do
   describe 'when url have the query string' do
     let(:url) { url_with_params foo: :bar }
 
-    it 'removes the query string' do
-      expect(subject.call url).not_to include 'foo'
-      expect(subject.call url).not_to include 'bar'
+    it 'does not add question mark' do
+      expect(subject.call(url).count('?')).to eq 1
+    end
+
+    it 'persists query string' do
+      expect(subject.call url).to include "foo=bar"
     end
   end
 
@@ -70,6 +73,16 @@ describe UrlTokenizer::FastlyQueryString do
 
       actual_expiration_time = subject.call(url, expires_in: 10).match(/\=(\d+)/)[1].to_i
       expect(actual_expiration_time).to be_within(2).of(local_expiration_time)
+    end
+  end
+
+  describe 'ads' do
+    describe 'with real data', real_data: true do
+      include_context "real_data_context" do
+        let(:expires_in) { 86400 }
+        let(:key) { ENV['FASTLY_TOKEN'] }
+        let(:url) { "url_goes_here" }
+      end
     end
   end
 
