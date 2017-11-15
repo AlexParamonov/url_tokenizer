@@ -24,7 +24,7 @@ module UrlTokenizer
       query = parse_query_string(uri)
       return query['chname'] if query.include?('chname')
 
-      File.basename File.dirname(uri.path)
+      File.dirname(uri.path)
     end
 
     private
