@@ -22,7 +22,7 @@ module UrlTokenizer
 
     def string_to_tokenize(uri)
       query = parse_query_string(uri)
-      return query['chname'] if query.include?('chname')
+      return uri.path[0..-(File.extname(uri.path).length + 1)] if query.key?('pub')
 
       File.dirname(uri.path)
     end
