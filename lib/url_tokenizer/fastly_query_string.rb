@@ -13,8 +13,9 @@ module UrlTokenizer
 
       token = digest [string_to_tokenize(uri), expiration].compact.join
       token = [expiration, token].compact.join '_'
+      token = "token=#{token}"
 
-      params = parse_query_string(uri).merge(token: token)
+      params = parse_query_string(uri).merge(cdntoken: token)
 
       uri.query = build_query params
       uri.to_s
