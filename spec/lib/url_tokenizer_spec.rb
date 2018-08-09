@@ -32,7 +32,5 @@ describe UrlTokenizer do
         end.to raise_error(described_class::Error)
       end
     end
-
   end
-
 end
