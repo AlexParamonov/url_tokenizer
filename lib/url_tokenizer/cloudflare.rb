@@ -1,6 +1,6 @@
 require 'rack'
 require 'uri'
-require 'digest'
+require 'openssl'
 require 'base64'
 require_relative 'provider'
 
@@ -14,7 +14,9 @@ module UrlTokenizer
 
       expiration = expiration_date(options[:expires_in])
 
-      token = digest [string_to_tokenize(uri), expiration].compact.join
+      string_to_digest = [string_to_tokenize(uri), expiration].compact.join
+
+      token = digest string_to_digest
       token = [expiration, token].compact.join '_'
 
       params = parse_query_string(uri).merge(verify: token)
@@ -38,8 +40,11 @@ module UrlTokenizer
     end
 
     def digest(string_to_sign)
-      sha256 = Digest::SHA256.digest([string_to_sign, key].join)
-      Base64.urlsafe_encode64(sha256)
+      sha256 = OpenSSL::HMAC.digest('sha256', key, string_to_sign)
+
+      CGI.escape(
+        Base64.encode64(sha256).strip
+      )
     end
   end
 end

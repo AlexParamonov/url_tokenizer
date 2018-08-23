@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'url_tokenizer/cloudflare'
+require 'support/real_data_context'
 require_relative 'provider_examples'
 
 describe UrlTokenizer::Cloudflare do
@@ -64,6 +65,14 @@ describe UrlTokenizer::Cloudflare do
 
       actual_expiration_time = subject.call(url, expires_in: 10).match(/\=(\d+)/)[1].to_i
       expect(actual_expiration_time).to be_within(2).of(local_expiration_time)
+    end
+  end
+
+  describe 'with real data', real_data: true do
+    include_context "real_data_context" do
+      let(:expires_in) { 86400 }
+      let(:key) { ENV['CLOUDFLARE_TOKEN'] }
+      let(:url) { 'url_goes_here' }
     end
   end
 
