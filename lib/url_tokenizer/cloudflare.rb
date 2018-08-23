@@ -1,6 +1,7 @@
 require 'rack'
 require 'uri'
-require 'openssl'
+require 'digest'
+require 'base64'
 require_relative 'provider'
 
 module UrlTokenizer
@@ -37,7 +38,8 @@ module UrlTokenizer
     end
 
     def digest(string_to_sign)
-      OpenSSL::HMAC.hexdigest('sha1', key, string_to_sign)
+      sha256 = Digest::SHA256.digest([string_to_sign, key].join)
+      Base64.urlsafe_encode64(sha256)
     end
   end
 end
